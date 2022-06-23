@@ -20,9 +20,8 @@ public class SplashActivity extends AppCompatActivity {
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().hide();
-
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
 
 
@@ -44,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
                 Intent intent;
-                intent = new Intent(SplashActivity.this, SettingsActivity.class);
+                intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
 

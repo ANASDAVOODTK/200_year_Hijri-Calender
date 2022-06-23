@@ -10,6 +10,7 @@
     android:layout_marginVertical="@dimen/widget_margin_vertical">
 
     <LinearLayout
+        android:id="@+id/touchid"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

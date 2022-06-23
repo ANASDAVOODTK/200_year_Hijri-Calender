@@ -2,6 +2,7 @@ package hijiri.Thaqweemul.materialclock;
 
 //import android.app.PendingIntent;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -98,6 +99,16 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
             redrawWidgetFromData(context, appWidgetManager, widgetId);
+            // Register an onClickListener
+            /*Intent intent = new Intent(context, ClockWidgetProvider.class);
+
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.clock, pendingIntent);
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);*/
         }
     }
 
@@ -147,6 +158,7 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
                 manager.updateAppWidget(id, views);
             }
         }
+
         catch (Exception e){
             e.printStackTrace();
         }
@@ -187,4 +199,6 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
                 return R.layout.widget_layout_default;
         }
     }
+
+
 }

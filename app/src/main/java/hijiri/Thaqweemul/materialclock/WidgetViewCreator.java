@@ -1,6 +1,9 @@
 package hijiri.Thaqweemul.materialclock;
 
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.TypedValue;
@@ -155,8 +158,8 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
             views.setViewVisibility(getCorrectTimeView(), View.VISIBLE);
         if (showDate)
             views.setViewVisibility(getCorrectDateView(), View.VISIBLE);
-        if(hrshowDate)
-            views.setViewVisibility(getCorrectHrDateView(), View.VISIBLE);
+        if(!hrshowDate)
+            views.setViewVisibility(getCorrectHrDateView(), View.GONE);
         //set clock format
         views.setCharSequence(getCorrectTimeView(),"setFormat24Hour",timeFormat);
         views.setCharSequence(getCorrectTimeView(),"setFormat12Hour",timeFormat);
@@ -174,6 +177,14 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
         views.setTextColor(getCorrectDateView(),dateColor);
         views.setTextColor(getCorrectHrDateView(),hrdateColor);
 
+        setListenerOnDate(context, views);
+
         return views;
+    }
+
+    protected void setListenerOnDate(Context context, RemoteViews views) {
+        Intent calendarIntent = new Intent();
+        calendarIntent.setComponent(new ComponentName("hijiri.Thaqweemul.materialclock", "hijiri.Thaqweemul.materialclock.SettingsActivity"));
+        views.setOnClickPendingIntent(R.id.touchid, PendingIntent.getActivity(context, 0, calendarIntent, 0));
     }
 }

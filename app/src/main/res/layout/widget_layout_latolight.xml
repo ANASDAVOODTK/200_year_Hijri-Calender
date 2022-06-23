@@ -12,6 +12,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:id="@+id/touchid"
         android:layout_height="wrap_content"
         android:weightSum="2">
         <android.widget.TextClock
