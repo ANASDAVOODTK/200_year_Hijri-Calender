@@ -1,0 +1,12 @@
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="120dp"
+    android:minHeight="100dp"
+    android:updatePeriodMillis="0"
+    android:previewImage="@drawable/app"
+    android:resizeMode="horizontal|vertical"
+    android:initialLayout="@layout/widget_layout_default"
+    android:configure="hijiri.Thaqweemul.materialclock.SettingsActivity"
+    android:widgetFeatures="reconfigurable"
+    android:widgetCategory="home_screen">
+</appwidget-provider>
