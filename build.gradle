@@ -7,12 +7,15 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
 
 
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.14.0'
+        classpath 'com.google.gms:google-services:4.3.13'
 
         
 
@@ -27,7 +30,7 @@ allprojects {
         mavenCentral()
         gradlePluginPortal()
         jcenter()
-
+        maven { url 'https://jitpack.io' }
 
     }
 }

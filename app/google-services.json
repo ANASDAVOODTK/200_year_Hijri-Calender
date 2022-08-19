@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "223726759133",
+    "firebase_url": "https://hijiri-calender-default-rtdb.firebaseio.com",
+    "project_id": "hijiri-calender",
+    "storage_bucket": "hijiri-calender.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223726759133:android:7f40ce83fcfe55be3bff34",
+        "android_client_info": {
+          "package_name": "hijiri.Thaqweemul.materialclock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223726759133-o7rlikvdcjagf0ivc5g85hjp3j846t46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJ0ch2fcbJO8T59k0WLZD0rjWqlNmD7HU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223726759133-o7rlikvdcjagf0ivc5g85hjp3j846t46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

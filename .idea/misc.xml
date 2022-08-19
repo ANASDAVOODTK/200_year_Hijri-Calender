@@ -38,9 +38,25 @@
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable-anydpi/ic_layout.xml" value="0.2345" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable-anydpi/ic_size.xml" value="0.2345" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable-anydpi/ic_text.xml" value="0.2345" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable-hdpi/bottom_box.xml" value="0.2435" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable-hdpi/date_box.xml" value="0.231" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/backgroudgradint.xml" value="0.324" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_baseline_arrow_circle_left_24.xml" value="0.2475" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_baseline_arrow_circle_right_24.xml" value="0.2475" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.231" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.231" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.231" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/ic_birth.xml" value="0.231" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/layout_bg.xml" value="0.2345" />
-        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/drawable/layout_cr.xml" value="0.1935" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.19479166666666667" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_age_calc.xml" value="0.33" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_data_feeding_main.xml" value="0.32222222222222224" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_login.xml" value="0.32222222222222224" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_main2.xml" value="0.33" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/activity_splash.xml" value="0.3625" />
+        <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/item_view.xml" value="0.32222222222222224" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/settings_activity.xml" value="0.3625" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/test.xml" value="0.3625" />
         <entry key="..\:/tweersnap/MaterialClockWidget/app/src/main/res/layout/widget_layout_archivoblack.xml" value="0.3625" />

@@ -20,7 +20,7 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
     static boolean showTime=true,
                 showDate,
                 hrshowDate;
-    static String timeFormat="k:mm",
+    static String timeFormat="h:mm",
                 dateFormat="EEE, MMM d",hrdateFormat="EEE, MMM d";
     static String fontName = "default";
     static int timeTextSize=42,
@@ -49,7 +49,7 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
         showDate = sharedPreferences.getBoolean(context.getString(R.string.sp_show_date),true);
         hrshowDate = sharedPreferences.getBoolean(context.getString(R.string.hr_show_date),true);
 
-        timeFormat = sharedPreferences.getString(context.getString(R.string.sp_time_format),"k:mm");
+        timeFormat = sharedPreferences.getString(context.getString(R.string.sp_time_format),"h:mm");
         dateFormat = sharedPreferences.getString(context.getString(R.string.sp_date_format),"EEE, MMM d");
         hrdateFormat = sharedPreferences.getString(context.getString(R.string.hr_date_format),"dd-MMMM");
 
@@ -183,8 +183,19 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
     }
 
     protected void setListenerOnDate(Context context, RemoteViews views) {
-        Intent calendarIntent = new Intent();
-        calendarIntent.setComponent(new ComponentName("hijiri.Thaqweemul.materialclock", "hijiri.Thaqweemul.materialclock.SettingsActivity"));
-        views.setOnClickPendingIntent(R.id.touchid, PendingIntent.getActivity(context, 0, calendarIntent, 0));
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+
+            Intent calendarIntent = new Intent();
+            calendarIntent.setComponent(new ComponentName("hijiri.Thaqweemul.materialclock", "hijiri.Thaqweemul.materialclock.SettingsActivity"));
+            views.setOnClickPendingIntent(R.id.touchid, PendingIntent.getActivity(context, 0, calendarIntent, PendingIntent.FLAG_MUTABLE));
+        }
+        else
+        {
+            Intent calendarIntent = new Intent();
+            calendarIntent.setComponent(new ComponentName("hijiri.Thaqweemul.materialclock", "hijiri.Thaqweemul.materialclock.SettingsActivity"));
+            views.setOnClickPendingIntent(R.id.touchid, PendingIntent.getActivity(context, 0, calendarIntent, 0));
+        }
+
     }
 }

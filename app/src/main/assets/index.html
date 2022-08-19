@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="ZulNs">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="robots" content="all">
+    <meta name="copyright" content="ZulNs">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <!--link rel="icon" href="favicon.png" type="image/png"-->
+    <style type="text/css">
+        .style-option {
+            position: fixed;
+            top: 16px;
+            right: 10px;
+            font: 12px Arial;
+            color: #444;
+            background-color:#F2F2F2;
+            padding: 3px 6px;
+            -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+        }
+
+        .style-option select {
+            background-color: transparent;
+            color: inherit;
+            border: 0;
+            outline: 0;
+            padding: 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .style-option select::-ms-expand {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <link rel="stylesheet" href="calendar.css">
+    <script type="text/javascript" src="hijri-date.js"></script>
+    <script type="text/javascript" src="calendar.js"></script>
+    
+    <p>&nbsp;</p>
+    <div id="calendar-converter"></div>
+    <script type="text/javascript">
+        var cal1 = new Calendar(false, 1, false, true),
+            cal2 = new Calendar(true, 0, false, true),
+            cal1Mode = cal1.isHijriMode(),
+            cal2Mode = cal2.isHijriMode();
+        document.getElementById('calendar-converter').appendChild(cal2.getElement());
+        cal2.show();
+
+        cal1.callback = function() {
+            if (cal1Mode !== cal1.isHijriMode()) {
+                cal2.disableCallback(true);
+                cal2.changeDateMode();
+                cal2.disableCallback(false);
+                cal1Mode = cal1.isHijriMode();
+                cal2Mode = cal2.isHijriMode();
+            } else
+                cal2.setTime(cal1.getTime());
+        };
+
+        cal2.callback = function() {
+            if (cal2Mode !== cal2.isHijriMode()) {
+                cal1.disableCallback(true);
+                cal1.changeDateMode();
+                cal1.disableCallback(false);
+                cal1Mode = cal1.isHijriMode();
+                cal2Mode = cal2.isHijriMode();
+            } else
+                cal1.setTime(cal2.getTime());
+        };
+
+        cal1.onHide = function() {
+            cal1.show();
+        };
+
+        cal2.onHide = function() {
+            cal2.show();
+        };
+
+        window.scrollTo(0, 0);
+    </script>
+   
+</body>
+
+</html>

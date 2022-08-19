@@ -26,6 +26,9 @@
             android:id="@+id/clock"
             style="@style/ClockStyle"
             android:fontFamily="@font/noto_sans"
+            android:textSize="34sp"
+            android:textColor="@color/white"
+            android:format12Hour="hh:mm"
             android:layout_weight="2"
             android:gravity="center"
             android:visibility="visible" />
@@ -54,6 +57,8 @@
             style="@style/ClockStyle"
             android:fontFamily="@font/noto_sans"
             android:layout_weight="1"
+            android:textSize="18sp"
+            android:format12Hour="dd-MMM-yyyy"
             android:gravity="center"
             android:visibility="visible" />
         <android.widget.TextClock

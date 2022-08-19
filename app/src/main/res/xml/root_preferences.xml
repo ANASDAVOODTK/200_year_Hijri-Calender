@@ -36,7 +36,7 @@
             app:cpv_showAlphaSlider="false"
             app:icon="@drawable/ic_colorize" />
         <EditTextPreference
-            android:defaultValue="k:mm"
+            android:defaultValue="h:mm"
             android:dialogMessage="@string/time_format_dialog_msg"
             android:icon="@drawable/ic_text"
             android:key="@string/sp_time_format"
