@@ -3,45 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/mainColor"
     android:layout_height="match_parent"
     tools:context=".AgeCalc">
 
-    <com.pddstudio.starview.StarView
-        android:id="@+id/starView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/hijiriHeding"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        android:text="Age Calculator In Hijri"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/hijiriHeding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16sp"
-            android:layout_weight="1"
-            android:text="Age Calculator In Hijri"
-            android:textColor="#FF5722"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/imgLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginEnd="16sp"
-            android:src="@drawable/ic_baseline_login_24" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/imgLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_login_24"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.flarebit.flarebarlib.FlareBar
         android:id="@+id/bottomBar"
@@ -56,28 +44,30 @@
         android:id="@+id/btn_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="152dp"
         android:layout_marginEnd="32dp"
+        android:background="@color/white"
         android:text="Check Your Date Of Birth"
+        android:textColor="@color/black"
         android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:spinning_bar_width="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/hijiriHeding"
         app:spinning_bar_color="#FFF"
-        app:spinning_bar_padding="6dp"/>
+        app:spinning_bar_padding="6dp"
+        app:spinning_bar_width="4dp" />
 
     <LinearLayout
         android:id="@+id/llout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="192dp"
-        android:background="@drawable/date_box"
+        android:background="@drawable/box"
         android:orientation="vertical"
         android:visibility="gone"
-        android:padding="8dp"
+        android:padding="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,8 +78,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Your Date Of Birth in Hijri"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18sp"
+            android:textAllCaps="true"
             android:textStyle="bold" />
 
         <TextView
@@ -97,8 +88,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="12dp"
             android:text="ssss"
-            android:textColor="@color/white"
+            android:textColor="@color/mainColor"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -108,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="sss"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -118,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="sss"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -128,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="sss"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
 

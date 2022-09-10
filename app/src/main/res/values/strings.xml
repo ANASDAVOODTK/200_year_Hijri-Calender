@@ -50,6 +50,7 @@
     <string name="hr_date_size">hr_date_size</string>
     <string name="hr_date_format">hr_date_format</string>
     <string name="hr_date_color">hr_date_color</string>
+    <string name="datePref">datePref</string>
     <string name="widget_text">1. Long-press on an empty area on the home screen of your Phone where you want to place a widget.
         \n\n 2. From the menu that pops up at the bottom, tap on Widgets.
         \n\n 3. Now, proceed to select the app whose widget you\'d like to add to your home screen.
@@ -89,6 +90,8 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

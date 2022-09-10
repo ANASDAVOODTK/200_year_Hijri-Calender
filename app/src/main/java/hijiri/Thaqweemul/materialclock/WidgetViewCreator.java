@@ -1,15 +1,34 @@
 package hijiri.Thaqweemul.materialclock;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.time.chrono.HijrahDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -176,10 +195,32 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
         //set date color
         views.setTextColor(getCorrectDateView(),dateColor);
         views.setTextColor(getCorrectHrDateView(),hrdateColor);
-
+        try {
+            views.setTextViewText(getCorrectHrDateView(),getHrDate());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setListenerOnDate(context, views);
 
         return views;
+    }
+
+    public String getHrDate() throws IOException {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("sp_main", MODE_PRIVATE);
+        String format = sharedPreferences.getString(context.getString(R.string.hr_date_format),"dd-MMMM");
+       String Date=getDate(context) ;
+
+        Log.d("tttttttttttttttttt",Date);
+        int dayOfMonth = Integer.parseInt(Date.substring(0,2));
+        int monthOfYear = Integer.parseInt(Date.substring(2,4));;
+        int year = Integer.parseInt(Date.substring(4,8));
+
+
+
+        HijrahDate hijrahDate = HijrahDate.of(year,monthOfYear,dayOfMonth);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        String islamicDate = formatter.format(hijrahDate);
+        return islamicDate;
     }
 
     protected void setListenerOnDate(Context context, RemoteViews views) {
@@ -198,4 +239,124 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
         }
 
     }
+
+
+    private String readJSONDataFromFile(Context context) throws IOException {
+
+        InputStream inputStream = null;
+        StringBuilder builder = new StringBuilder();
+
+        try {
+
+            String jsonString = null;
+            inputStream = context.getResources().openRawResource(R.raw.hrdat);
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(inputStream, "UTF-8"));
+
+            while ((jsonString = bufferedReader.readLine()) != null) {
+                builder.append(jsonString);
+            }
+
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+        return new String(builder);
+    }
+
+
+    public String getDate(Context context) throws IOException {
+        String jsonString=readJSONDataFromFile(context);
+        String hjrDate = "";
+        String date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
+        String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        try {
+            JSONArray valarray = new JSONArray(jsonString);
+            for (int i = 0; i < valarray.length(); i++) {
+
+                String str = valarray.getJSONObject(i).getString("ggdate");
+                if(str.equals(date))
+                {
+                    String year = valarray.getJSONObject(i).getString("year");
+                    String month = valarray.getJSONObject(i).getString("month");
+                    String day = valarray.getJSONObject(i).getString("hijridate");
+                    if(day.length()==1)
+                    {
+                        day = "0"+day;
+                    }
+                    hjrDate = day+getMonthNo(month)+year;
+                }
+                else if(str.equals(date1))
+                {
+                    String year = valarray.getJSONObject(i).getString("year");
+                    String month = valarray.getJSONObject(i).getString("month");
+                    String day = valarray.getJSONObject(i).getString("hijridate");
+                    if(day.length()==1)
+                    {
+                        day = "0"+day;
+                    }
+                    hjrDate = day+getMonthNo(month)+year;
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("JSON", "There was an error parsing the JSON", e);
+        }
+        return hjrDate;
+    }
+
+    public String getMonthNo(String month)
+    {
+        String m = "0";
+        if(month.equals("Muharram"))
+        {
+            m="01";
+        }
+        else if(month.equals("Safar"))
+        {
+            m="02";
+        }
+        else if(month.equals("R-Awwal"))
+        {
+            m="03";
+        }
+        else if(month.equals("R-Aakhir"))
+        {
+            m="04";
+        }
+        else if(month.equals("J-Awwal"))
+        {
+            m="05";
+        }
+        else if(month.equals("J-Aakhir"))
+        {
+            m="06";
+        }
+        else if(month.equals("Rajab"))
+        {
+            m="07";
+        }
+        else if(month.equals("Sha-Ban"))
+        {
+            m="08";
+        }
+        else if(month.equals("Ramadan"))
+        {
+            m="09";
+        }
+        else if(month.equals("Shawwal"))
+        {
+            m="10";
+        }
+        else if(month.equals("Dhul Qa-Dha"))
+        {
+            m="11";
+        }
+        else if(month.equals("Dhul Hijjah"))
+        {
+            m="12";
+        }
+        return m;
+    }
+
 }

@@ -1,11 +1,13 @@
 package hijiri.Thaqweemul.materialclock;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class HijriAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -37,7 +42,7 @@ public class HijriAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView day;
         private TextView hjdate;
         private TextView ggdate;
-        private TextView fq,fm,lq;
+        private TextView fq,fm,lq,lvc;
         ImageView moonPhase;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -48,6 +53,7 @@ public class HijriAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             fq = (TextView) itemView.findViewById(R.id.fq);
             fm = (TextView) itemView.findViewById(R.id.fm);
             lq = (TextView) itemView.findViewById(R.id.lq);
+            lvc = (TextView) itemView.findViewById(R.id.lvc);
             moonPhase = (ImageView) itemView.findViewById(R.id.moonPhase);
         }
     }
@@ -86,40 +92,52 @@ public class HijriAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
                 HijiriModel hijiriModel = (HijiriModel) listRecyclerItem.get(i);
 
-                itemViewHolder.day.setText(getDay(hijiriModel.getGgdate()));
-                itemViewHolder.hjdate.setText(hijiriModel.getHijridate()+"-"+hijiriModel.getMonth()+"-"+hijiriModel.getYear());
+                //itemViewHolder.day.setText(getDay(hijiriModel.getGgdate()));
+                itemViewHolder.day.setText(hijiriModel.getHijridate());
+                itemViewHolder.hjdate.setText(hijiriModel.getMonth());
                 itemViewHolder.ggdate.setText(hijiriModel.getGgdate());
-                itemViewHolder.fq.setText("First Quarter\n"+hijiriModel.getFq());
-                itemViewHolder.fm.setText("Full Moon\n"+hijiriModel.getFm());
-                itemViewHolder.lq.setText("Last Quarter\n"+hijiriModel.getLq());
+                itemViewHolder.fq.setText(hijiriModel.getFq());
+                itemViewHolder.fm.setText(hijiriModel.getFm());
+                itemViewHolder.lq.setText(hijiriModel.getLq());
                 itemViewHolder.moonPhase.setImageResource(context.getResources().getIdentifier("a"+hijiriModel.getHijridate(), "drawable", context.getPackageName()));
 
-
+                try {
+                    itemViewHolder.lvc.setText(getDay(hijiriModel.getLq()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
         }
 
     }
 
 
-    public String getDay(String dateValue)
-    {
-        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = inFormat.parse(dateValue);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
-        String week = outFormat.format(date);
-        return week;
+    public String getDay(String dateValue) throws ParseException {
+        String data = "";
+
+        String sDate = dateValue;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        Date date = dateFormat.parse(sDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        data = dateFormat.format(calendar.getTime());
+        return data;
     }
 
 
     public void getItemPosition() {
         int a;
+        String date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
+        String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         for (int i = 0; i < listRecyclerItem.size(); i++) {
-            if (listRecyclerItem.get(i).getGgdate().equals("2022-8-17")) {
+            if (listRecyclerItem.get(i).getGgdate().equals(date)) {
+                a= i;
+                final ApplicationClass applicationClass = (ApplicationClass) context.getApplicationContext();
+                applicationClass.setPosition(a);
+                stopLoop=1;
+            }
+            else if (listRecyclerItem.get(i).getGgdate().equals(date1)) {
                 a= i;
                 final ApplicationClass applicationClass = (ApplicationClass) context.getApplicationContext();
                 applicationClass.setPosition(a);

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +21,9 @@ import android.os.StrictMode;
 import android.text.TextPaint;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -48,7 +51,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Fragment {
+
+    public MainActivity() {
+        // Required empty public constructor
+    }
 
     int[] textViewIds = new int[] {R.id.txt0,R.id.txt1,R.id.txt2,R.id.txt3,R.id.txt4,R.id.txt5,R.id.txt6,R.id.txt7,R.id.txt8,
             R.id.txt9,R.id.txt10, R.id.txt11,R.id.txt12,R.id.txt13,R.id.txt14,R.id.txt15,
@@ -65,24 +72,33 @@ public class MainActivity extends AppCompatActivity {
     int monthn;
     int yearn;
     DatabaseReference reff;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_main);
+    View v;
 
-        SharedPreferences prefs = getSharedPreferences("datevr", MODE_PRIVATE);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_main, container, false);
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+        v = getView();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("datevr", Context.MODE_PRIVATE);
         String year = prefs.getString("year", "");
         String month = prefs.getString("month", "");
         islamicDate = prefs.getString("day", "");
         islamicDate1 = year+"_"+month;
 
-        monthName = findViewById(R.id.monthName);
-        front=findViewById(R.id.front);
-        back=findViewById(R.id.back);
+        monthName = v.findViewById(R.id.monthName);
+        front=v.findViewById(R.id.front);
+        back=v.findViewById(R.id.back);
 
 
-        setText();
 
         front.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,13 +115,13 @@ public class MainActivity extends AppCompatActivity {
                     islamicDate1= yearn+"_"+monthn;
                 }
 
-                getdata();
+                getdata(1);
                 final Handler handler = new Handler(Looper.getMainLooper());
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView)findViewById(textViewIds[clear])).setTextColor(getResources().getColor(R.color.black));
-                        ((TextView)findViewById(textViewIds[clear])).setBackgroundColor(getResources().getColor(R.color.background));
+                        ((TextView)v.findViewById(textViewIds[clear])).setTextColor(getResources().getColor(R.color.black));
+                        ((TextView)v.findViewById(textViewIds[clear])).setBackgroundColor(getResources().getColor(R.color.background));
 
                     }
                 }, 1000);
@@ -127,13 +143,13 @@ public class MainActivity extends AppCompatActivity {
                     islamicDate1= yearn+"_"+monthn;
                 }
 
-                getdata();
+                getdata(1);
                 final Handler handler = new Handler(Looper.getMainLooper());
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView)findViewById(textViewIds[clear])).setTextColor(getResources().getColor(R.color.black));
-                        ((TextView)findViewById(textViewIds[clear])).setBackgroundColor(getResources().getColor(R.color.background));
+                        ((TextView)v.findViewById(textViewIds[clear])).setTextColor(getResources().getColor(R.color.black));
+                        ((TextView)v.findViewById(textViewIds[clear])).setBackgroundColor(getResources().getColor(R.color.background));
 
                     }
                 }, 1000);
@@ -141,85 +157,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        getdata();
-        bottombar();
-
-
-    }
-
-    public void setText()
-    {
-        TextView textView = (TextView) findViewById(R.id.textView);
-        TextView textView2 = (TextView) findViewById(R.id.textView2);
-        textView.setText("Thaqweemul Hijri".toUpperCase());
-        TextPaint paint = textView.getPaint();
-        float width = paint.measureText("Thaqweemul Hijri");
-        Shader textShader = new LinearGradient(0, 0, width, textView.getTextSize(),
-                new int[]{
-                        Color.parseColor("#7e4397"),
-                        Color.parseColor("#8e3c81"),
-                        Color.parseColor("#ad3366"),
-                        Color.parseColor("#cb2940"),
-                        Color.parseColor("#d7222d"),
-                }, null, Shader.TileMode.CLAMP);
-        textView.getPaint().setShader(textShader);
-
-
-        textView2.setText("Add Hijri Date Widgets To Your HomeScreen");
-        TextPaint paint2 = textView.getPaint();
-        float width1 = paint2.measureText("Add Hijri Date Widgets To Your HomeScreen");
-        Shader textShader1 = new LinearGradient(0, 0, width1, textView.getTextSize(),
-                new int[]{
-                        Color.parseColor("#7e4397"),
-                        Color.parseColor("#8e3c81"),
-                        Color.parseColor("#ad3366"),
-                        Color.parseColor("#cb2940"),
-                        Color.parseColor("#d7222d"),
-                }, null, Shader.TileMode.CLAMP);
-        textView2.getPaint().setShader(textShader1);
-    }
-
-    public void bottombar()
-    {
-        final FlareBar bottomBar = findViewById(R.id.bottomBar);
-        bottomBar.setBackground(getResources().getDrawable(R.drawable.bottom_box));
-        ArrayList<Flaretab> tabs = new ArrayList<>();
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_home_24),"Home","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_calendar_month_24),"Calender","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_birth),"Age Calc","#FFECB3"));
-        bottomBar.setSelectedIndex(1);
-        bottomBar.setTabChangedListener(new TabEventObject.TabChangedListener() {
-            @Override
-            public void onTabChanged(LinearLayout selectedTab, int selectedIndex, int oldIndex) {
-                //tabIndex starts from 0 (zero). Example : 4 tabs = last Index - 3
-                //Toast.makeText(MainActivity.this,"Tab "+ selectedIndex+" Selected.",Toast.LENGTH_SHORT).show();
-                if(selectedIndex==2)
-                {
-                    Intent i = new Intent(MainActivity.this, AgeCalc.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-                if(selectedIndex==0)
-                {
-                    Intent i = new Intent(MainActivity.this, MainActivity2.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-            }
-        });
-        bottomBar.setTabList(tabs);
-        bottomBar.attachTabs(MainActivity.this);
+        getdata(0);
     }
 
 
 
 
 
-    public void getdata(){
+
+    public void getdata(int check){
 
         reff= FirebaseDatabase.getInstance().getReference().child("Calender_Data").child(islamicDate1);
         reff.addValueEventListener(new ValueEventListener() {
@@ -268,21 +214,25 @@ public class MainActivity extends AppCompatActivity {
 
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 1; i< dayNumber+1; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i));
+                            if(islamicDate.equals(String.valueOf(i))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+
+
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i));
+
 
 
                         }
@@ -293,21 +243,23 @@ public class MainActivity extends AppCompatActivity {
 
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 2; i< dayNumber+2; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i-1)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-1));
+                            if(islamicDate.equals(String.valueOf(i-1))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-1));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-1));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-1));
+
 
                         }
                     }
@@ -316,21 +268,23 @@ public class MainActivity extends AppCompatActivity {
 
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 3; i< dayNumber+3; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i-2)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-2));
+                            if(islamicDate.equals(String.valueOf(i-2))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-2));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-2));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-2));
+
 
 
                         }
@@ -339,88 +293,96 @@ public class MainActivity extends AppCompatActivity {
                     {
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 4; i< dayNumber +4; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i-3)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-3));
+                            if(islamicDate.equals(String.valueOf(i-3))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-3));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-3));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-3));
+
                         }
                     }
                     else if(week.equals("Friday"))
                     {
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 5; i< dayNumber +5; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i-4)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-4));
+                            if(islamicDate.equals(String.valueOf(i-4))&&check==0)
                             {
                                 //Toast.makeText(MainActivity.this, String.valueOf(i), Toast.LENGTH_SHORT).show();
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-4));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-4));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-4));
+
                         }
                     }
                     else if(week.equals("Saturday"))
                     {
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
 
                         for(int i = 6; i< dayNumber +6; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i-5)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-5));
+                            ((TextView)v.findViewById(textViewIds[i])).setVisibility(View.VISIBLE);
+                            ((TextView)v.findViewById(textViewIds[0])).setVisibility(View.INVISIBLE);
+                            if(islamicDate.equals(String.valueOf(i-5))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-5));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i-5));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i-5));
-                            ((TextView)findViewById(textViewIds[i])).setVisibility(View.VISIBLE);
-                            ((TextView)findViewById(textViewIds[0])).setVisibility(View.INVISIBLE);
+
                         }
                     }
                     else if(week.equals("Sunday"))
                     {
                         for(int i=0;i<36;i++ )
                         {
-                            ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
-                            ((TextView)findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf("*"));
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.gray));
+                            ((TextView)v.findViewById(textViewIds[i])).setBackgroundColor(getResources().getColor(R.color.background));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf("*"));
 
                         }
                         for(int i = 0; i< dayNumber; i++ )
                         {
-                            if(islamicDate.equals(String.valueOf(i+1)))
+                            ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.black));
+                            ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i+1));
+                            if(islamicDate.equals(String.valueOf(i+1))&&check==0)
                             {
                                 clear=i;
-                                ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i+1));
-                                ((TextView)findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
-                                ((TextView)findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
+                                ((TextView)v.findViewById(textViewIds[i])).setText(String.valueOf(i+1));
+                                ((TextView)v.findViewById(textViewIds[i])).setTextColor(getResources().getColor(R.color.white));
+                                ((TextView)v.findViewById(textViewIds[i])).setBackground(getResources().getDrawable(R.drawable.layout_cr));
                             }
-                            ((TextView)findViewById(textViewIds[i])).setText(String.valueOf(i+1));
+
 
                         }
 
@@ -431,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "This year or month Not added from admin", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "This year or month Not added from admin", Toast.LENGTH_SHORT).show();
                 }
 
 

@@ -45,7 +45,7 @@ import java.util.Objects;
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long delayTime = 1500;
+    private static final long delayTime = 1000;
     Handler handler = new Handler();
     private Context context;
 
@@ -77,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
                Intent intent;
-               intent = new Intent(SplashActivity.this, MainActivity2.class);
+               intent = new Intent(SplashActivity.this, MainActivity3.class);
                startActivity(intent);
                 finish();
 
@@ -113,12 +113,27 @@ public class SplashActivity extends AppCompatActivity {
     public void getDate() throws IOException {
         String jsonString=readJSONDataFromFile();
         String date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
+        String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         try {
             JSONArray valarray = new JSONArray(jsonString);
             for (int i = 0; i < valarray.length(); i++) {
 
                 String str = valarray.getJSONObject(i).getString("ggdate");
                 if(str.equals(date))
+                {
+                    String year = valarray.getJSONObject(i).getString("year");
+                    String month = valarray.getJSONObject(i).getString("month");
+                    String day = valarray.getJSONObject(i).getString("hijridate");
+                    //Toast.makeText(SplashActivity.this, day+"-"+month+"-"+year, Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences.Editor editor = getSharedPreferences("datevr", MODE_PRIVATE).edit();
+                    editor.putString("dateToday", day+"-"+month+"-"+year);
+                    editor.putString("day", day);
+                    editor.putString("month", String.valueOf(getMonthNo(month)));
+                    editor.putString("year", year);
+                    editor.apply();
+                }
+                if(str.equals(date1))
                 {
                     String year = valarray.getJSONObject(i).getString("year");
                     String month = valarray.getJSONObject(i).getString("month");

@@ -109,15 +109,14 @@
             android:title="@string/date_color_picker_title"
             app:cpv_showAlphaSlider="false"
             app:icon="@drawable/ic_colorize" />
-        <EditTextPreference
-            android:defaultValue="dd-MMMM"
-            android:dialogMessage="@string/date_format_dialog_msg1"
+        <ListPreference
+            android:title="Choose Date Format"
+            android:key="@string/datePref"
             android:icon="@drawable/ic_text"
-            android:key="@string/hr_date_format"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/date_format_title"
-            app:useSimpleSummaryProvider="true" />
+            android:defaultValue="1"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"
+            app:useSimpleSummaryProvider="true"/>
         <SeekBarPreference
             android:key="@string/hr_date_size"
             android:max="100"

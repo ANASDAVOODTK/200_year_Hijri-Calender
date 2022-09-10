@@ -1,6 +1,5 @@
 package hijiri.Thaqweemul.materialclock;
 
-//import android.app.PendingIntent;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -18,6 +17,8 @@ import android.widget.RemoteViews;
 import static android.content.Context.MODE_PRIVATE;
 
 import androidx.annotation.RequiresApi;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,13 +34,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpdatedInterface {
-    public static final String CLICK_ACTION = "xyz.yoav.materialclock.CLICK_ACTION";
-    public static final String EXTRA_ITEM = "xyz.yoav.materialclock.EXTRA_ITEM";
-    public static final String APPWIDGET_UPDATE_OPTIONS = "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS";
-    public static final String APPWIDGET_ENABLED = "android.appwidget.action.APPWIDGET_ENABLED";
+
 
     WidgetViewCreator widgetViewCreator;
 
@@ -75,10 +74,10 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
         ComponentName componentName = new ComponentName(context,ClockWidgetProvider.class);
         int appWidgetIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(componentName);
         if (appWidgetIds.length == 0) {
-            Log.e("onEnabled","hello");
+            Log.e("onEnabled","hello1");
             appWidgetIds = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, getClass()));
         }
-        Log.e("onEnabled","hello");
+        Log.e("onEnabled","hello2");
         updateClockWithDynamicTextSizes(context, appWidgetIds);
 
     }
@@ -115,6 +114,7 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         // This function is called when widget is resized
         int[] appWidgetIds = {appWidgetId};
+        Log.e("onEnabled","hello3");
         updateClockWithDynamicTextSizes(context, appWidgetIds);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 
@@ -127,21 +127,21 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void updateClockWithDynamicTextSizes(Context context, int[] appWidgetIds) {
-        AlarmHandler alarmHandler = new AlarmHandler(context);
-        alarmHandler.cancelAlarmManager();
-        alarmHandler.setAlaramManager();
+        
+
         try {
             SharedPreferences sharedPreferences = context.getSharedPreferences("sp_main", MODE_PRIVATE);
             String fontName = sharedPreferences.getString(context.getString(R.string.sp_font),"default");
             String format = sharedPreferences.getString(context.getString(R.string.hr_date_format),"dd-MMMM");
-            Log.d("tttttttttttttttttttt",format);
             AppWidgetManager manager = AppWidgetManager.getInstance(context);
             @SuppressLint("RemoteViewLayout") RemoteViews views = new RemoteViews(context.getPackageName(), getLayoutResource(fontName));
             String Date=getDate(context) ;
+
+            Log.d("tttttttttttttttttt",Date);
             int dayOfMonth = Integer.parseInt(Date.substring(0,2));
-            int monthOfYear = Integer.parseInt(Date.substring(2,3));;
-            int year = Integer.parseInt(Date.substring(3,7));;
-            Log.d("rrrrrrrrr",dayOfMonth+" "+monthOfYear+" "+year);
+            int monthOfYear = Integer.parseInt(Date.substring(2,4));;
+            int year = Integer.parseInt(Date.substring(4,8));
+
 
 
             HijrahDate hijrahDate = HijrahDate.of(year,monthOfYear,dayOfMonth);
@@ -224,6 +224,7 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
         String jsonString=readJSONDataFromFile(context);
         String hjrDate = "";
         String date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
+        String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         try {
             JSONArray valarray = new JSONArray(jsonString);
             for (int i = 0; i < valarray.length(); i++) {
@@ -234,6 +235,21 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
                     String year = valarray.getJSONObject(i).getString("year");
                     String month = valarray.getJSONObject(i).getString("month");
                     String day = valarray.getJSONObject(i).getString("hijridate");
+                    if(day.length()==1)
+                    {
+                        day = "0"+day;
+                    }
+                    hjrDate = day+getMonthNo(month)+year;
+                }
+                else if(str.equals(date1))
+                {
+                    String year = valarray.getJSONObject(i).getString("year");
+                    String month = valarray.getJSONObject(i).getString("month");
+                    String day = valarray.getJSONObject(i).getString("hijridate");
+                    if(day.length()==1)
+                    {
+                        day = "0"+day;
+                    }
                     hjrDate = day+getMonthNo(month)+year;
                 }
             }
@@ -243,56 +259,56 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
         return hjrDate;
     }
 
-    public int getMonthNo(String month)
+    public String getMonthNo(String month)
     {
-        int m = 0;
+        String m = "0";
         if(month.equals("Muharram"))
         {
-            m=1;
+            m="01";
         }
         else if(month.equals("Safar"))
         {
-            m=2;
+            m="02";
         }
         else if(month.equals("R-Awwal"))
         {
-            m=3;
+            m="03";
         }
         else if(month.equals("R-Aakhir"))
         {
-            m=4;
+            m="04";
         }
         else if(month.equals("J-Awwal"))
         {
-            m=5;
+            m="05";
         }
         else if(month.equals("J-Aakhir"))
         {
-            m=6;
+            m="06";
         }
         else if(month.equals("Rajab"))
         {
-            m=7;
+            m="07";
         }
         else if(month.equals("Sha-Ban"))
         {
-            m=8;
+            m="08";
         }
         else if(month.equals("Ramadan"))
         {
-            m=9;
+            m="09";
         }
         else if(month.equals("Shawwal"))
         {
-            m=10;
+            m="10";
         }
         else if(month.equals("Dhul Qa-Dha"))
         {
-            m=11;
+            m="11";
         }
         else if(month.equals("Dhul Hijjah"))
         {
-            m=12;
+            m="12";
         }
         return m;
     }

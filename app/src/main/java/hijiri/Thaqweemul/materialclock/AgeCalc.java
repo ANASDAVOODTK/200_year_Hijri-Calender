@@ -1,6 +1,7 @@
 package hijiri.Thaqweemul.materialclock;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,7 +15,9 @@ import android.os.Looper;
 import android.text.TextPaint;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,51 +50,52 @@ import java.util.TimeZone;
 
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 
-public class AgeCalc extends AppCompatActivity {
+public class AgeCalc extends Fragment {
+
+    public AgeCalc() {
+        // Required empty public constructor
+    }
+
 
     boolean run = true;
+    View v;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_age_calc);
-        getSupportActionBar().hide();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_age_calc, container, false);
+    }
 
-        TextView textView = findViewById(R.id.hijiriHeding);
-        TextPaint paint = textView.getPaint();
-        float width = paint.measureText("Age Calculator In Hijri");
-        Shader textShader = new LinearGradient(0, 0, width, textView.getTextSize(),
-                new int[]{
-                        Color.parseColor("#7e4397"),
-                        Color.parseColor("#8e3c81"),
-                        Color.parseColor("#ad3366"),
-                        Color.parseColor("#cb2940"),
-                        Color.parseColor("#d7222d"),
-                }, null, Shader.TileMode.CLAMP);
-        textView.getPaint().setShader(textShader);
 
-        ImageView imageView = findViewById(R.id.imgLogin);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+        v = getView();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
+
+        ImageView imageView = v.findViewById(R.id.imgLogin);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(AgeCalc.this, LoginActivity.class );
+                Intent intent = new Intent(getActivity(), LoginActivity.class );
                 startActivity(intent);
             }
         });
-        bottombar();
 
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("Choose Your Date Of Birth");
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
 
 
-        CircularProgressButton btn = (CircularProgressButton) findViewById(R.id.btn_id);
+        CircularProgressButton btn = (CircularProgressButton) v.findViewById(R.id.btn_id);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 btn.startAnimation();
-                materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
 
             }
         });
@@ -107,13 +111,15 @@ public class AgeCalc extends AppCompatActivity {
                         calendar.setTimeInMillis((Long) selection);
                         SimpleDateFormat formatd = new SimpleDateFormat("dd");
                         SimpleDateFormat formatm = new SimpleDateFormat("M");
+                        SimpleDateFormat formatm1 = new SimpleDateFormat("MM");
                         SimpleDateFormat formaty = new SimpleDateFormat("yyyy");
                         String day  = formatd.format(calendar.getTime());
                         String month  = formatm.format(calendar.getTime());
+                        String month1  = formatm1.format(calendar.getTime());
                         String year  = formaty.format(calendar.getTime());
                         run = true;
                         try {
-                            getDate(year,month,day);
+                            getDate(year,month,day,month1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -125,42 +131,8 @@ public class AgeCalc extends AppCompatActivity {
 
     }
 
-    public void bottombar()
-    {
-        final FlareBar bottomBar = findViewById(R.id.bottomBar);
-        bottomBar.setBackground(getResources().getDrawable(R.drawable.bottom_box));
-        ArrayList<Flaretab> tabs = new ArrayList<>();
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_home_24),"Home","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_calendar_month_24),"Calender","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_birth),"Age Calc","#FFECB3"));
-        bottomBar.setSelectedIndex(2);
-        bottomBar.setTabChangedListener(new TabEventObject.TabChangedListener() {
-            @Override
-            public void onTabChanged(LinearLayout selectedTab, int selectedIndex, int oldIndex) {
-                //tabIndex starts from 0 (zero). Example : 4 tabs = last Index - 3
-                //Toast.makeText(MainActivity.this,"Tab "+ selectedIndex+" Selected.",Toast.LENGTH_SHORT).show();
-                if(selectedIndex==1)
-                {
-                    Intent i = new Intent(AgeCalc.this, MainActivity.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
 
-                if(selectedIndex==0)
-                {
-                    Intent i = new Intent(AgeCalc.this, MainActivity2.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-            }
-        });
-        bottomBar.setTabList(tabs);
-        bottomBar.attachTabs(AgeCalc.this);
-    }
+
 
     private String readJSONDataFromFile() throws IOException {
 
@@ -187,7 +159,7 @@ public class AgeCalc extends AppCompatActivity {
     }
 
 
-    public void getDate(String y,String m,String d) throws IOException {
+    public void getDate(String y,String m,String d,String m1) throws IOException {
         String jsonString=readJSONDataFromFile();
         String hjrDate = "";
          try {
@@ -204,9 +176,9 @@ public class AgeCalc extends AppCompatActivity {
                         String month = valarray.getJSONObject(i).getString("month");
                         String day = valarray.getJSONObject(i).getString("hijridate");
                         hjrDate = day+"-"+month+"-"+year;
-                        LinearLayout linearLayout = findViewById(R.id.llout);
-                        TextView hgdate = findViewById(R.id.hjdate);
-                        TextView ggdate = findViewById(R.id.ggdate);
+                        LinearLayout linearLayout = v.findViewById(R.id.llout);
+                        TextView hgdate = v.findViewById(R.id.hjdate);
+                        TextView ggdate = v.findViewById(R.id.ggdate);
                         hgdate.setText(hjrDate);
                         ggdate.setText(d+"-"+m+"-"+y);
 
@@ -219,13 +191,49 @@ public class AgeCalc extends AppCompatActivity {
                         }
                         SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
                         String week = outFormat.format(date);
-                        TextView ggday = findViewById(R.id.ggday);
+                        TextView ggday = v.findViewById(R.id.ggday);
                         ggday.setText(week);
 
                         String tdydate = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
                         int age = Integer.parseInt(tdydate)-Integer.parseInt(y);
 
-                        TextView txtage = findViewById(R.id.age);
+                        TextView txtage = v.findViewById(R.id.age);
+                        txtage.setText("Your Age : "+age);
+
+                        linearLayout.setVisibility(View.VISIBLE);
+                        run=false;
+                    }
+                }
+                else if(str.equals(y+"-"+m1+"-"+d))
+                {
+                    if(run)
+                    {
+                        String year = valarray.getJSONObject(i).getString("year");
+                        String month = valarray.getJSONObject(i).getString("month");
+                        String day = valarray.getJSONObject(i).getString("hijridate");
+                        hjrDate = day+"-"+month+"-"+year;
+                        LinearLayout linearLayout = v.findViewById(R.id.llout);
+                        TextView hgdate = v.findViewById(R.id.hjdate);
+                        TextView ggdate = v.findViewById(R.id.ggdate);
+                        hgdate.setText(hjrDate);
+                        ggdate.setText(d+"-"+m1+"-"+y);
+
+                        SimpleDateFormat inFormat = new SimpleDateFormat("dd-M-yyyy");
+                        Date date = null;
+                        try {
+                            date = inFormat.parse(d+"-"+m+"-"+y);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+                        String week = outFormat.format(date);
+                        TextView ggday = v.findViewById(R.id.ggday);
+                        ggday.setText(week);
+
+                        String tdydate = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
+                        int age = Integer.parseInt(tdydate)-Integer.parseInt(y);
+
+                        TextView txtage = v.findViewById(R.id.age);
                         txtage.setText("Your Age : "+age);
 
                         linearLayout.setVisibility(View.VISIBLE);

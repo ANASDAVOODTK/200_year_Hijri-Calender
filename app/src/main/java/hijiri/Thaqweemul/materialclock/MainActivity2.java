@@ -1,40 +1,20 @@
 package hijiri.Thaqweemul.materialclock;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextPaint;
-import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.flarebit.flarebarlib.FlareBar;
-import com.flarebit.flarebarlib.Flaretab;
-import com.flarebit.flarebarlib.TabEventObject;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,29 +23,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.chrono.HijrahDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-public class MainActivity2 extends AppCompatActivity {
-    private Calendar calendar;
-    public Calendar getCalendar() {
-        // This method creates an instance of calender.
-        if (this.calendar == null) {
-            this.calendar = Calendar.getInstance();
-        }
-        return this.calendar;
+
+public class MainActivity2 extends Fragment {
+
+
+
+    public MainActivity2() {
+        // Required empty public constructor
     }
-    DatabaseReference reff;
 
-
+    LottieAnimationView loader;
+    ImageView refresh;
     private RecyclerView mRecyclerView;
     private List<HijiriModel> viewItems = new ArrayList<>();
 
@@ -75,41 +47,63 @@ public class MainActivity2 extends AppCompatActivity {
     private static final String TAG = "MainActivity2";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        getSupportActionBar().hide();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_main2, container, false);
+    }
 
-        SharedPreferences prefs = getSharedPreferences("datevr", MODE_PRIVATE);
-        String name = prefs.getString("datevr", "No name defined");
-       // Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        super.onActivityCreated(savedInstanceState);
+        View v = getView();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(MainActivity2.this,
-                LinearLayoutManager.HORIZONTAL,
-                false);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new HijriAdapter(this, viewItems);
-        mRecyclerView.setAdapter(mAdapter);
-        addItemsFromJSON();
-        bottombar();
-
-        ImageView refresh = findViewById(R.id.refresh);
+        refresh = v.findViewById(R.id.refresh);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity2.this.recreate();
+                final ApplicationClass globalVariable = ((ApplicationClass)getActivity().getApplicationContext());
+                mRecyclerView.smoothScrollToPosition(globalVariable.getPosition1());
 
             }
         });
+        loader=v.findViewById(R.id.loading);
+
+        final Handler handler1 = new Handler(Looper.getMainLooper());
+        handler1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
+
+                mRecyclerView.setHasFixedSize(true);
+
+                // use a linear layout manager
+                layoutManager = new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false);
+                mRecyclerView.setLayoutManager(layoutManager);
+
+                // specify an adapter (see also next example)
+                mAdapter = new HijriAdapter(getActivity(), viewItems);
+                mRecyclerView.setAdapter(mAdapter);
+
+
+                try {
+                    addItemsFromJSON();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1500);
+
+
+
+
 
     }
+
 
 
     private void addItemsFromJSON() {
@@ -145,17 +139,22 @@ public class MainActivity2 extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final ApplicationClass globalVariable = (ApplicationClass) getApplicationContext();
+
+                final ApplicationClass globalVariable = ((ApplicationClass)getActivity().getApplicationContext());
+                Log.d("testingggg", String.valueOf(globalVariable.getPosition1()));
                mRecyclerView.getLayoutManager().scrollToPosition(globalVariable.getPosition1()-10);
                 final Handler handler1 = new Handler(Looper.getMainLooper());
                 handler1.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mRecyclerView.smoothScrollToPosition(globalVariable.getPosition1()+2);
+                        loader.setVisibility(View.GONE);
+                        refresh.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mRecyclerView.smoothScrollToPosition(globalVariable.getPosition1());
                     }
-                }, 500);
+                }, 200);
             }
-        }, 500);
+        }, 1000);
     }
 
     private String readJSONDataFromFile() throws IOException{
@@ -181,46 +180,6 @@ public class MainActivity2 extends AppCompatActivity {
         }
         return new String(builder);
     }
-
-    public void bottombar()
-    {
-        final FlareBar bottomBar = findViewById(R.id.bottomBar);
-        bottomBar.setBackground(getResources().getDrawable(R.drawable.bottom_box));
-        ArrayList<Flaretab> tabs = new ArrayList<>();
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_home_24),"Home","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_baseline_calendar_month_24),"Calender","#FFECB3"));
-        tabs.add(new Flaretab(getResources().getDrawable(R.drawable.ic_birth),"Age Calc","#FFECB3"));
-        bottomBar.setTabChangedListener(new TabEventObject.TabChangedListener() {
-            @Override
-            public void onTabChanged(LinearLayout selectedTab, int selectedIndex, int oldIndex) {
-                //tabIndex starts from 0 (zero). Example : 4 tabs = last Index - 3
-                //Toast.makeText(MainActivity.this,"Tab "+ selectedIndex+" Selected.",Toast.LENGTH_SHORT).show();
-                if(selectedIndex==2)
-                {
-                    Intent i = new Intent(MainActivity2.this, AgeCalc.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-
-                if(selectedIndex==1)
-                {
-                    Intent i = new Intent(MainActivity2.this, MainActivity.class);
-                    overridePendingTransition(0, 0);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-            }
-        });
-        bottomBar.setTabList(tabs);
-        bottomBar.attachTabs(MainActivity2.this);
-    }
-
-
-
-
 
 
 

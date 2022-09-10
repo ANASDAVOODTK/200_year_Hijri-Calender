@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +29,12 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.TwoStatePreference;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
+
+import java.util.concurrent.TimeUnit;
 
 public class SettingsActivity extends AppCompatActivity implements WidgetUpdatedInterface {
 
@@ -83,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity implements WidgetUpdated
 
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        ListPreference hrdatePreff;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -128,8 +134,9 @@ public class SettingsActivity extends AppCompatActivity implements WidgetUpdated
             TwoStatePreference hrshow_date = findPreference(getString(R.string.hr_show_date));
             hrshow_date.setChecked(sharedPref.getBoolean(getString(R.string.hr_show_date), true));
             hrshow_date.setOnPreferenceChangeListener(listener);
-            EditTextPreference hrdateFormat = findPreference(getString(R.string.hr_date_format));
-            hrdateFormat.setOnPreferenceChangeListener(listener);
+
+            hrdatePreff = findPreference(getString(R.string.datePref));
+            hrdatePreff.setOnPreferenceChangeListener(listener);
 
             ListPreference widgetOrientation = findPreference(getString(R.string.sp_layout));
             widgetOrientation.setOnPreferenceChangeListener(listener);
@@ -170,17 +177,55 @@ public class SettingsActivity extends AppCompatActivity implements WidgetUpdated
                     editor.putInt(getString(R.string.hr_date_color), (int) newValue);
                 if (getString(R.string.hr_show_date).equals(preference.getKey()))
                     editor.putBoolean(getString(R.string.hr_show_date), (boolean) newValue);
-                if (getString(R.string.hr_date_format).equals(preference.getKey()))
-                    editor.putString(getString(R.string.hr_date_format), (String) newValue);
+
                 if (getString(R.string.sp_layout).equals(preference.getKey()))
                     editor.putInt(getString(R.string.sp_layout), Integer.parseInt((String) newValue));
 
+                if (getString(R.string.datePref).equals(preference.getKey()))
+                    editor.putString(getString(R.string.hr_date_format), getDateHr((String) newValue));
 
                 editor.apply();
                 return true;
             }
         };
 
+    }
+
+    public static String getDateHr(String i)
+    {
+        String date = "";
+        switch (i) {
+            case "1":
+                date = "dd,MM,yyyy";
+                break;
+            case "2":
+                date = "dd-MM-yyyy";
+                break;
+            case "3":
+                date = "dd/MM/yyyy";
+                break;
+            case "4":
+                date = "dd,MMMM";
+                break;
+            case "5":
+                date = "dd-MMMM";
+                break;
+            case "6":
+                date = "dd/MMMM";
+                break;
+            case "7":
+                date = "dd,MMMM,yyyy";
+                break;
+            case "8":
+                date = "dd-MMMM-yyyy";
+                break;
+            case "9":
+                date = "dd/MMMM/yyyy";
+                break;
+        }
+
+
+        return date;
     }
 
     private void setupPreviewFrame() {
@@ -255,6 +300,11 @@ public class SettingsActivity extends AppCompatActivity implements WidgetUpdated
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.savebtn) {
+            PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(ScheduledTask.class,3, TimeUnit.HOURS)
+                    .addTag("Strted periodic req")
+                    .setInitialDelay(1,TimeUnit.SECONDS)
+                    .build();
+            WorkManager.getInstance(this).enqueue(periodicWorkRequest);
             finish(); //thats enough. finishing this activity will activate the widget
         }
         return super.onOptionsItemSelected(item);
