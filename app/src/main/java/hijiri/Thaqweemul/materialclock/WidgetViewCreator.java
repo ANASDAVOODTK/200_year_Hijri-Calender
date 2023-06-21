@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
     private WidgetUpdatedInterface widgetUpdatedInterface;
 
     public WidgetViewCreator(WidgetUpdatedInterface widgetUpdatedInterface, Context context) {
+
         this.context = context;
         this.widgetUpdatedInterface = widgetUpdatedInterface;
     }
@@ -162,11 +164,12 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
     }
 
     public RemoteViews createWidgetRemoteView() {
+
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 getLayoutResource());
 
-        //set clock alignment
-        views.setViewVisibility(R.id.clockLeft, View.GONE);
+                //set clock alignment
+                views.setViewVisibility(R.id.clockLeft, View.GONE);
         views.setViewVisibility(R.id.clock, View.GONE);
         views.setViewVisibility(R.id.clockRight, View.GONE);
         //set date alignment
@@ -195,32 +198,10 @@ public class WidgetViewCreator implements SharedPreferences.OnSharedPreferenceCh
         //set date color
         views.setTextColor(getCorrectDateView(),dateColor);
         views.setTextColor(getCorrectHrDateView(),hrdateColor);
-        try {
-            views.setTextViewText(getCorrectHrDateView(),getHrDate());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        views.setTextViewText(getCorrectHrDateView(),"ardate");
         setListenerOnDate(context, views);
 
         return views;
-    }
-
-    public String getHrDate() throws IOException {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("sp_main", MODE_PRIVATE);
-        String format = sharedPreferences.getString(context.getString(R.string.hr_date_format),"dd-MMMM");
-       String Date=getDate(context) ;
-
-        Log.d("tttttttttttttttttt",Date);
-        int dayOfMonth = Integer.parseInt(Date.substring(0,2));
-        int monthOfYear = Integer.parseInt(Date.substring(2,4));;
-        int year = Integer.parseInt(Date.substring(4,8));
-
-
-
-        HijrahDate hijrahDate = HijrahDate.of(year,monthOfYear,dayOfMonth);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        String islamicDate = formatter.format(hijrahDate);
-        return islamicDate;
     }
 
     protected void setListenerOnDate(Context context, RemoteViews views) {

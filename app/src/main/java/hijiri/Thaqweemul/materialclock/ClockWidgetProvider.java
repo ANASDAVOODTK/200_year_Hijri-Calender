@@ -227,7 +227,7 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
         String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         try {
             JSONArray valarray = new JSONArray(jsonString);
-            for (int i = 0; i < valarray.length(); i++) {
+            for (int i = 44320; i < valarray.length(); i++) {
 
                 String str = valarray.getJSONObject(i).getString("ggdate");
                 if(str.equals(date))
@@ -262,53 +262,43 @@ public class ClockWidgetProvider extends AppWidgetProvider implements WidgetUpda
     public String getMonthNo(String month)
     {
         String m = "0";
-        if(month.equals("Muharram"))
-        {
-            m="01";
-        }
-        else if(month.equals("Safar"))
-        {
-            m="02";
-        }
-        else if(month.equals("R-Awwal"))
-        {
-            m="03";
-        }
-        else if(month.equals("R-Aakhir"))
-        {
-            m="04";
-        }
-        else if(month.equals("J-Awwal"))
-        {
-            m="05";
-        }
-        else if(month.equals("J-Aakhir"))
-        {
-            m="06";
-        }
-        else if(month.equals("Rajab"))
-        {
-            m="07";
-        }
-        else if(month.equals("Sha-Ban"))
-        {
-            m="08";
-        }
-        else if(month.equals("Ramadan"))
-        {
-            m="09";
-        }
-        else if(month.equals("Shawwal"))
-        {
-            m="10";
-        }
-        else if(month.equals("Dhul Qa-Dha"))
-        {
-            m="11";
-        }
-        else if(month.equals("Dhul Hijjah"))
-        {
-            m="12";
+        switch (month) {
+            case "Muharram":
+                m = "01";
+                break;
+            case "Safar":
+                m = "02";
+                break;
+            case "R-Awwal":
+                m = "03";
+                break;
+            case "R-Aakhir":
+                m = "04";
+                break;
+            case "J-Awwal":
+                m = "05";
+                break;
+            case "J-Aakhir":
+                m = "06";
+                break;
+            case "Rajab":
+                m = "07";
+                break;
+            case "Sha-Ban":
+                m = "08";
+                break;
+            case "Ramadan":
+                m = "09";
+                break;
+            case "Shawwal":
+                m = "10";
+                break;
+            case "Dhul Qa-Dha":
+                m = "11";
+                break;
+            case "Dhul Hijjah":
+                m = "12";
+                break;
         }
         return m;
     }

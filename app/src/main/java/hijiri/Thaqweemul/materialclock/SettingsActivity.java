@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity implements WidgetUpdated
         preview = findViewById(R.id.preview_view);
 
         widgetViewCreator = new WidgetViewCreator(this, this);
-
+        Toast.makeText(SettingsActivity.this, "Loading ....", Toast.LENGTH_SHORT).show();
         setupPreviewFrame();
         widgetSetup();
     }

@@ -3,6 +3,7 @@ package hijiri.Thaqweemul.materialclock;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +131,7 @@ public class HijriAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int a;
         String date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
         String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        for (int i = 0; i < listRecyclerItem.size(); i++) {
+        for (int i = 44320; i < 72645; i++) {
             if (listRecyclerItem.get(i).getGgdate().equals(date)) {
                 a= i;
                 final ApplicationClass applicationClass = (ApplicationClass) context.getApplicationContext();

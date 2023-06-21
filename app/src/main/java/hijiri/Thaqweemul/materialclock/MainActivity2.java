@@ -112,7 +112,7 @@ public class MainActivity2 extends Fragment {
             String jsonDataString = readJSONDataFromFile();
             JSONArray jsonArray = new JSONArray(jsonDataString);
 
-            for (int i=0; i<jsonArray.length(); ++i) {
+            for (int i=0; i<72645; ++i) {
 
                 JSONObject itemObj = jsonArray.getJSONObject(i);
 

@@ -116,7 +116,7 @@ public class SplashActivity extends AppCompatActivity {
         String date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         try {
             JSONArray valarray = new JSONArray(jsonString);
-            for (int i = 0; i < valarray.length(); i++) {
+            for (int i = 44320; i < valarray.length(); i++) {
 
                 String str = valarray.getJSONObject(i).getString("ggdate");
                 if(str.equals(date))

@@ -5,6 +5,7 @@
 
 
         <ListPreference
+            app:isPreferenceVisible="false"
             android:defaultValue="latoreg"
             android:entries="@array/font_list"
             android:entryValues="@array/font_list_values"
